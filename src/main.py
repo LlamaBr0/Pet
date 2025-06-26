@@ -58,11 +58,10 @@ def seek():
 calibrateInertial()
 
 while True:
-
     seek()
 
-    drivebase.turn_to_heading(angle, DEGREES, 20, PERCENT, True)
-    drivebase.drive_for(FORWARD, object_distance, MM, 30, PERCENT, True)
+    drivebase.turn_to_heading(angle, DEGREES, 40, PERCENT, True)
+    drivebase.drive_for(FORWARD, object_distance, MM, 60, PERCENT, True)
 
 
 
