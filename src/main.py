@@ -17,7 +17,7 @@ motorR = Motor(Ports.PORT1)
 motorL = Motor(Ports.PORT5)
 senseMotor = Motor(Ports.PORT4)
 sense = Distance(Ports.PORT2)
-drivebase = SmartDrive(motorL, motorR, brainInertial, 260)
+drivebase = SmartDrive(motorL, motorR, brainInertial, 260, 320, 320, MM, 1)
 
 def calibrateInertial():
     brain.screen.print("Calibrating Gyro")
@@ -35,15 +35,20 @@ motorR.set_reversed(True)
 
 def seek():
     global found_object
+    found_object = False
     global angle
     global object_distance 
-    while sense.object_distance(INCHES) > 40:
-        senseMotor.spin_to_position(20, DEGREES)
-        senseMotor.spin_to_position(-20, DEGREES)
+    while found_object == False:
+        senseMotor.spin_to_position(30, DEGREES, 5, PERCENT, False)
+        if sense.object_distance(INCHES) < 40:
+            break
+        senseMotor.spin_to_position(-30, DEGREES, 5, PERCENT, False)
+        if sense.object_distance(INCHES) < 40:
+            break
     senseMotor.stop(BRAKE)
     angle = senseMotor.position(DEGREES)
     found_object = True
-    object_distance = sense.object_distance(MM)
+    object_distance = sense.object_distance()
 
 calibrateInertial()
 
@@ -51,6 +56,6 @@ while True:
 
     seek()
 
-    drivebase.turn_to_heading(angle, DEGREES, 10, PERCENT, True)
-    drivebase.drive_for(FORWARD, object_distance - 30, MM, 20, PERCENT, True)
+    drivebase.turn_to_heading(angle, DEGREES, 20, PERCENT, True)
+    drivebase.drive_for(FORWARD, object_distance, MM, 30, PERCENT, True)
 
